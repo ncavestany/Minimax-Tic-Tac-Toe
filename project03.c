@@ -115,6 +115,15 @@ bool checkDraw(board_t board) {
 	return false;
 }
 
+bool checkBest(int score, int best, int player) {
+	if (player == 'X') {
+		return best > score;
+	}
+	else {
+		return best < score;
+	}
+}
+
 int minimax(board_t board, char player, int depth) {
 	int score;
 	int row;
@@ -176,15 +185,10 @@ void find_best_move(board_t board, char player, int *pr, int *pc) {
 					score = minimax(board, 'X', 0);
 				}
 				board[row][col] = '_'; // Undo the move.
-				if (score > best && player == 'O') { // Update the current best score and best move.
+				if (checkBest(score, best, player)) { // Update the current best score and best move.
 					best = score;
 					*pr = row;
 					*pc = col;
-				}
-				else if (score < best && player == 'X') {
-					best = score;
-					*pr = row;
-					*pc = col;	
 				}
 			}
 		}		
