@@ -117,10 +117,10 @@ bool checkDraw(board_t board) {
 
 bool checkBest(int score, int best, char player) {
 	if (player == 'X') {
-		return score < best; // If the player is X, then check if score is less than current best.
+		return score > best; // If the player is X, then check if score is greater than current best.
 	}
 	else {
-		return score > best; // If the player is O, check if score is greater than best.
+		return score < best; // If the player is O, check if score is less than best.
 	}
 	// If this function returns true, then the running best is updated.
 }
@@ -172,7 +172,7 @@ int minimax(board_t board, char player, int depth) {
 
 void find_best_move(board_t board, char player, int *pr, int *pc) {
 	int score;
-	int best = 0;
+	int best = 100000;
 	int row;
 	int col;
 			
@@ -187,11 +187,12 @@ void find_best_move(board_t board, char player, int *pr, int *pc) {
 					score = minimax(board, 'X', 0);
 				}
 				board[row][col] = '_'; // Undo the move.
+				printf("Best score for %d, %d is %d\n", row, col, score);
 				if (checkBest(score, best, player)) { // Update the current best score and best move.
 					best = score;
 					*pr = row;
 					*pc = col;
-					printf("Best score for %d, %d is %d\n", row, col, score);
+					
 				}
 			}
 		}		
