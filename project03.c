@@ -94,21 +94,21 @@ bool checkDiagonal(board_t board, char player) {
 	return false;
 }
 
-bool checkXWin(board_t board, char player1) {
+bool checkXWin(board_t board, char player1) { // Checks if X has won. Returns false if not.
 	if (checkRow(board, player1) || checkColumn(board, player1) || checkDiagonal(board, player1)) {
 		return true;
 	}
 	return false;
 }
 
-bool checkOWin(board_t board, char player2) {
+bool checkOWin(board_t board, char player2) { // Checks if O has won. Returns false if not.
 	if (checkRow(board, player2) || checkColumn(board, player2) || checkDiagonal(board, player2)) {
 		return true;
 	}
 	return false;
 }
 
-bool checkDraw(board_t board) {
+bool checkDraw(board_t board) { // Checks if the board is full and neither of the other players have won.
 	if ((checkXWin(board, 'X') == false || checkOWin(board, 'O') == false) && isFull(board)) {
 	    return true;
 	}
@@ -130,11 +130,11 @@ int minimax(board_t board, char player, int depth) {
 	int score;
 	int row;
 	int col;
-	if (checkXWin(board, player)) {
+	if (checkXWin(board, 'X')) {
 		score = 10 - depth;
 		return score;
 	}
-	if (checkOWin(board, player)) {
+	if (checkOWin(board, 'O')) {
 		score = (-10) + depth;
 		return score;
 	}
@@ -172,7 +172,7 @@ int minimax(board_t board, char player, int depth) {
 
 void find_best_move(board_t board, char player, int *pr, int *pc) {
 	int score;
-	int best = 100000;
+	int best = 10;
 	int row;
 	int col;
 			
@@ -187,7 +187,6 @@ void find_best_move(board_t board, char player, int *pr, int *pc) {
 					score = minimax(board, 'X', 0);
 				}
 				board[row][col] = '_'; // Undo the move.
-				printf("Best score for %d, %d is %d\n", row, col, score);
 				if (checkBest(score, best, player)) { // Update the current best score and best move.
 					best = score;
 					*pr = row;
@@ -199,8 +198,17 @@ void find_best_move(board_t board, char player, int *pr, int *pc) {
 	}
 }
 
-bool terminal_state(board_t board) { // If the board is at an ending point (victory or draw), return true.
-	if (checkXWin(board, 'X') || checkOWin(board, 'O') || checkDraw(board)) {
+bool terminal_state(board_t board) { // If the board is at an ending point (victory or draw), return true and display the result..
+	if (checkXWin(board, 'X')) {
+		printf("X wins.\n");
+		return true;
+	}
+	else if (checkOWin(board, 'O')) {
+		printf("O wins.\n");
+		return true;
+	}
+	else if (checkDraw(board)){
+		printf("Draw\n");
 		return true;
 	}
 	else {
@@ -218,17 +226,19 @@ int main(int argc, char **argv) {
 
     
 	if (argc == 1) {
-		while(!terminal_state(board)) {
+		while(!terminal_state(board)) { // Run until the board is not in a state of victory or draw.
 			printf("X: ");
 			fscanf(stdin, "%d %d", &row, &col);
-			if (board[row][col] != 'X' || board[row][col] != 'O') {
+			if (board[row][col] == '_') {
 				board[row][col] = 'X';
-				if (terminal_state(board)) {
+				if (terminal_state(board)) {	
 					break;
 				}
+				printBoard(board);
 				find_best_move(board, 'O', &row, &col);
 				board[row][col] = 'O';
 				printf("O: %d %d\n", row, col);
+				printBoard(board);
 			}
 			else {
 				printf("Illegal move\n");
