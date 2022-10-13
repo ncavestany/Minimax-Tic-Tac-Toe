@@ -191,6 +191,7 @@ void find_best_move(board_t board, char player, int *pr, int *pc) {
 					best = score;
 					*pr = row;
 					*pc = col;
+					printf("Best score for %d, %d is %d\n", row, col, score);
 				}
 			}
 		}		
