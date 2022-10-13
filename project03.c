@@ -24,7 +24,7 @@ void printBoard(board_t board) { // Prints the board with proper formatting.
 	}
 }
 
-void initializeBoard(board_t board) {
+void initializeBoard(board_t board) { // Fills the entire board with '_' characters.
 	int row;
 	int col;
 	for (row = 0; row < 3; row++) {
@@ -115,14 +115,16 @@ bool checkDraw(board_t board) {
 	return false;
 }
 
-bool checkBest(int score, int best, int player) {
+bool checkBest(int score, int best, char player) {
 	if (player == 'X') {
-		return best > score;
+		return score < best; // If the player is X, then check if score is less than current best.
 	}
 	else {
-		return best < score;
+		return score > best; // If the player is O, check if score is greater than best.
 	}
+	// If this function returns true, then the running best is updated.
 }
+
 
 int minimax(board_t board, char player, int depth) {
 	int score;
@@ -133,7 +135,7 @@ int minimax(board_t board, char player, int depth) {
 		return score;
 	}
 	if (checkOWin(board, player)) {
-		score = -10 + depth;
+		score = (-10) + depth;
 		return score;
 	}
 	if (checkDraw(board)) {
@@ -195,7 +197,7 @@ void find_best_move(board_t board, char player, int *pr, int *pc) {
 	}
 }
 
-bool terminal_state(board_t board) {
+bool terminal_state(board_t board) { // If the board is at an ending point (victory or draw), return true.
 	if (checkXWin(board, 'X') || checkOWin(board, 'O') || checkDraw(board)) {
 		return true;
 	}
@@ -208,7 +210,6 @@ bool terminal_state(board_t board) {
 int main(int argc, char **argv) {
     board_t board;
     initializeBoard(board);
-
     int i = 1; // The current index of the user input.
     int row;
     int col;
@@ -222,7 +223,7 @@ int main(int argc, char **argv) {
 				board[row][col] = 'X';
 				if (terminal_state(board)) {
 					break;
-			}
+				}
 				find_best_move(board, 'O', &row, &col);
 				board[row][col] = 'O';
 				printf("O: %d %d\n", row, col);
