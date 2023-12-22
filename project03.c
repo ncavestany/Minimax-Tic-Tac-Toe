@@ -219,8 +219,11 @@ bool terminal_state(board_t board) { // If the board is at an ending point (vict
 
 int main(int argc, char **argv) {
     char playAgain;
-    printf("Welcome to the Minimax Tic-Tac-Toe Game! Enter your first move. (Column #, Row #) \n");
+    printf("Welcome to the Minimax Tic-Tac-Toe Game!\n");
     do {
+    	if (playAgain == 'y') { // Reset board input if there was any.
+    		argc = 1;
+    	}
         board_t board;
         initializeBoard(board);
         int i = 1; // The current index of the user input.
