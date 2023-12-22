@@ -218,47 +218,53 @@ bool terminal_state(board_t board) { // If the board is at an ending point (vict
 
 
 int main(int argc, char **argv) {
-    board_t board;
-    initializeBoard(board);
-    int i = 1; // The current index of the user input.
-    int row;
-    int col;
+    char playAgain;
+    printf("Welcome to the Minimax Tic-Tac-Toe Game! Enter your first move. (Column #, Row #) \n");
+    do {
+        board_t board;
+        initializeBoard(board);
+        int i = 1; // The current index of the user input.
+        int row;
+        int col;
 
-    
-	if (argc == 1) {
-		while(!terminal_state(board)) { // Run until the board is not in a state of victory or draw.
-			printf("X: ");
-			fscanf(stdin, "%d %d", &row, &col);
-			if (board[row][col] == '_') {
-				board[row][col] = 'X';
-				if (terminal_state(board)) {	
-					break;
-				}
-				printBoard(board);
-				find_best_move(board, 'O', &row, &col);
-				board[row][col] = 'O';
-				printf("O: %d %d\n", row, col);
-				printBoard(board);
-			}
-			else {
-				printf("Illegal move\n");
-			}
-		}
-		
-	}  
-	else {	// Populating the board based on user input if there are any arguments.
-		for (row = 0; row < 3; row++) {
-			 for (col = 0; col < 3; col++) {
-		        board[row][col] = argv[i][0];
-		        i++;
-		   }
-		}
-		row = 0;
-		col = 0;
-		printBoard(board);
-		find_best_move(board, 'O', &row, &col);
-		printf("O: %d %d\n", row, col);
-	}
-		
+        if (argc == 1) {
+        	printf("Enter your first move. (Column #, Row #) \n");
+            while (!terminal_state(board)) { // Run until the board is not in a state of victory or draw.
+                printf("X: ");
+                fscanf(stdin, "%d %d", &row, &col);
+                if (board[row][col] == '_') {
+                    board[row][col] = 'X';
+                    if (terminal_state(board)) {
+                        break;
+                    }
+                    printBoard(board);
+                    find_best_move(board, 'O', &row, &col);
+                    board[row][col] = 'O';
+                    printf("O: %d %d\n", row, col);
+                    printBoard(board);
+                } else {
+                    printf("Illegal move\n");
+                }
+            }
+        } else {    // Populating the board based on user input if there are any arguments.
+            for (row = 0; row < 3; row++) {
+                for (col = 0; col < 3; col++) {
+                    board[row][col] = argv[i][0];
+                    i++;
+                }
+            }
+            row = 0;
+            col = 0;
+            printBoard(board);
+            find_best_move(board, 'O', &row, &col);
+            printf("O: %d %d\n", row, col);
+        }
+
+        printf("Would you like to play again? Enter 'y' if yes or 'n' if no: ");
+        scanf(" %c", &playAgain); // Note the space before %c to consume any previous newline character.
+
+    } while (playAgain == 'y');
+
+    printf("Thank you for playing! \n");
     return 0;
 }
